@@ -109,6 +109,9 @@
 			});`
 		);
 		html_editor.setValue(`<div ng-app = 'myApp'>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.min.js"></script>
+
 	  <div ng-controller='myCtrl'>
 	   <input type='text' ng-model='name' />
 	    {{name}}
