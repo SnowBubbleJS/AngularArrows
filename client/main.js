@@ -27,7 +27,9 @@
 		src = src.replace('</head>', css + '</head>');
 
 		// Javascript
+
 		app = '<script>' + app + '<\/script>';
+
 		src = src.replace('</body>', app + '</body>');
 
 		// controller
@@ -94,7 +96,31 @@
 	});
 
 	// SETTING CODE EDITORS INITIAL CONTENT
-	html_editor.setValue('<p>Hello World</p>');
+
+		app_editor.setValue(`var myApp = angular.module('myApp',[]);
+			myApp.controller('myCtrl',function($scope){
+			  $scope.name = 'Matt';
+
+			   $scope.$watch('name',function(newVal,oldVal){
+			    console.log('old :' + oldVal);
+			    console.log('new :' + newVal);
+			//      console.log($scope)
+			  });
+			});`
+		);
+		html_editor.setValue(`<div ng-app = 'myApp'>
+
+	<!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.min.js"></script>-->
+
+	  <div ng-controller='myCtrl'>
+	   <input type='text' ng-model='name' />
+	    {{name}}
+	  </div>
+
+	</div> `
+		);
+
+	appValue(htmlValue);
 	css_editor.setValue('body { color: red; }');
 
 
