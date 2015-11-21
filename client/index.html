@@ -1,38 +1,48 @@
-<link rel="stylesheet" href="http://codemirror.net/lib/codemirror.css">
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+    <link rel="stylesheet" href="http://codemirror.net/lib/codemirror.css">
+    <link rel="stylesheet" href="style.css" media="screen" title="no title" charset="utf-8">
+  </head>
+  <body>
+    <div id="wrap">
 
-<div id="wrap">
+    	<!-- Code Editors -->
+    	<section id="code_editors">
+    		<div id="html" class="code_box">
+    			<h3>HTML</h3>
+    			<textarea name="html"></textarea>
+    		</div>
+    		<div id="css" class="code_box">
+    			<h3>CSS</h3>
+    			<textarea name="css"></textarea>
+    		</div>
+    		<div id="js" class="code_box">
+    			<h3>JavaScript</h3>
+    			<textarea name="js"></textarea>
+    		</div>
+    	</section>
 
-	<!-- Code Editors -->
-	<section id="code_editors">
-		<div id="html" class="code_box">
-			<h3>HTML</h3>
-			<textarea name="html"></textarea>
-		</div>
-		<div id="css" class="code_box">
-			<h3>CSS</h3>
-			<textarea name="css"></textarea>
-		</div>
-		<div id="js" class="code_box">
-			<h3>JavaScript</h3>
-			<textarea name="js"></textarea>
-		</div>
-	</section>
+    	<!-- Sandboxing -->
+    	<section id="output">
+    		<iframe></iframe>
+    	</section>
 
-	<!-- Sandboxing -->
-	<section id="output">
-		<iframe></iframe>
-	</section>
+    </div>
 
-</div>
+    <script src="http://codemirror.net/lib/codemirror.js"></script>
 
-<script src="http://codemirror.net/lib/codemirror.js"></script>
+    <!-- For HTML/XML -->
+    <script src="http://codemirror.net/mode/xml/xml.js"></script>
+    <script src="http://codemirror.net/mode/htmlmixed/htmlmixed.js"></script>
 
-<!-- For HTML/XML -->
-<script src="http://codemirror.net/mode/xml/xml.js"></script>
-<script src="http://codemirror.net/mode/htmlmixed/htmlmixed.js"></script>
+    <!-- For CSS -->
+    <script src="http://codemirror.net/mode/css/css.js"></script>
+    <!-- For JS -->
+    <script src="http://codemirror.net/mode/javascript/javascript.js"></script>
+    <script type="text/javascript" src="main.js"></script>
 
-<!-- For CSS -->
-<script src="http://codemirror.net/mode/css/css.js"></script>
-
-<!-- For JS -->
-<script src="http://codemirror.net/mode/javascript/javascript.js"></script>
+  </body>
+</html>
