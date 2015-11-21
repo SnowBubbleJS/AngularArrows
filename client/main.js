@@ -15,7 +15,8 @@
 	var prepareSource = function() {
 		var html = html_editor.getValue(),
 				css = css_editor.getValue(),
-				js = js_editor.getValue(),
+				app = app_editor.getValue(),
+				controller = controller_editor.getValue(),
 				src = '';
 
 		// HTML
@@ -26,8 +27,12 @@
 		src = src.replace('</head>', css + '</head>');
 
 		// Javascript
-		js = '<script>' + js + '<\/script>';
-		src = src.replace('</body>', js + '</body>');
+		app = '<script>' + app + '<\/script>';
+		src = src.replace('</body>', app + '</body>');
+
+		// controller
+		controller = '<script>' + controller + '<\/script>';
+		src = src.replace('</body>', controller + '</body>');
 
 		return src;
 	};
@@ -70,14 +75,23 @@
     render();
   });
 
-	// JAVASCRIPT EDITOR
-	cm_opt.mode = 'javascript';
-	var js_box = document.querySelector('#js textarea');
-	var js_editor = CodeMirror.fromTextArea(js_box, cm_opt);
+	// APP EDITOR
+	cm_opt.mode = 'app';
+	var app_box = document.querySelector('#app textarea');
+	var app_editor = CodeMirror.fromTextArea(app_box, cm_opt);
 
-  js_editor.on('change', function (inst, changes) {
+  app_editor.on('change', function (inst, changes) {
     render();
   });
+
+	// CONTROLLER EDITOR
+	cm_opt.mode = 'controller';
+	var controller_box = document.querySelector('#controller textarea');
+	var controller_editor = CodeMirror.fromTextArea(controller_box, cm_opt);
+
+	controller_editor.on('change', function (inst, changes) {
+		render();
+	});
 
 	// SETTING CODE EDITORS INITIAL CONTENT
 	html_editor.setValue('<p>Hello World</p>');
@@ -97,7 +111,7 @@
 	/*
 		Fixing the Height of CodeMirror.
 		You might want to do this in CSS instead
-		of JS and override the styles from the main
+		of app and override the styles from the main
 		codemirror.css
 	*/
 	var cms = document.querySelectorAll('.CodeMirror');
