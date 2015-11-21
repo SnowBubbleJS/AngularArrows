@@ -1,14 +1,38 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title>Angular Arrows</title>
-    <script type="text/javascript" src="./../codemirror-5.8/lib/codemirror.js"></script>
-    <link rel="stylesheet" href="./../codemirror-5.8/lib/codemirror.css">
-    <script src="./../codemirror-5.8/mode/javascript/javascript.js"></script>
-  </head>
-  <body>
-    <script type="text/javascript" src="./main.js"></script>
-    <button type="button" onclick="submit()" name="button">Eval</button>
-  </body>
-</html>
+<link rel="stylesheet" href="http://codemirror.net/lib/codemirror.css">
+
+<div id="wrap">
+
+	<!-- Code Editors -->
+	<section id="code_editors">
+		<div id="html" class="code_box">
+			<h3>HTML</h3>
+			<textarea name="html"></textarea>
+		</div>
+		<div id="css" class="code_box">
+			<h3>CSS</h3>
+			<textarea name="css"></textarea>
+		</div>
+		<div id="js" class="code_box">
+			<h3>JavaScript</h3>
+			<textarea name="js"></textarea>
+		</div>
+	</section>
+
+	<!-- Sandboxing -->
+	<section id="output">
+		<iframe></iframe>
+	</section>
+
+</div>
+
+<script src="http://codemirror.net/lib/codemirror.js"></script>
+
+<!-- For HTML/XML -->
+<script src="http://codemirror.net/mode/xml/xml.js"></script>
+<script src="http://codemirror.net/mode/htmlmixed/htmlmixed.js"></script>
+
+<!-- For CSS -->
+<script src="http://codemirror.net/mode/css/css.js"></script>
+
+<!-- For JS -->
+<script src="http://codemirror.net/mode/javascript/javascript.js"></script>

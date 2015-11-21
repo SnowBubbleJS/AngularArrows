@@ -10,6 +10,7 @@ function submit() {
   func();
 
 }
+console.log('hello from main.js');
 
 // var myCodeMirror2 = CodeMirror(document.body, {
 //   value: "function myScript(){return 100;}\n",
@@ -18,16 +19,7 @@ function submit() {
 
 myCodeMirror.linkedDoc();
 
-var myCodeMirror3 = CodeMirror(document.body, {
-  lineNumbers: true,
-  value: "function myScript(){return 100;}\n",
-  mode:  "javascript"
-});
 
-var myCodeMirror4 = CodeMirror(document.body, {
-  lineNumbers: true,
-  value: "function myScript(){return 100;}\n",
-  mode:  "javascript"
-});
+
 
 // document.querySelector(".CodeMirror").addLineClass(1, 'background', "highlighted-line");
