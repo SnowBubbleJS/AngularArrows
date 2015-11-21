@@ -14,7 +14,7 @@
 
 	var prepareSource = function() {
 		var html = html_editor.getValue(),
-				css = css_editor.getValue(),
+				// css = css_editor.getValue(),
 				app = app_editor.getValue(),
 				controller = controller_editor.getValue(),
 				src = '';
@@ -23,8 +23,8 @@
 		src = base_tpl.replace('</body>', html + '</body>');
 
 		// CSS
-		css = '<style>' + css + '</style>';
-		src = src.replace('</head>', css + '</head>');
+		// css = '<style>' + css + '</style>';
+		// src = src.replace('</head>', css + '</head>');
 
 		// Javascript
 
@@ -69,13 +69,13 @@
   });
 
 	// CSS EDITOR
-	cm_opt.mode = 'css';
-	var css_box = document.querySelector('#css textarea');
-	var css_editor = CodeMirror.fromTextArea(css_box, cm_opt);
-
-  css_editor.on('change', function (inst, changes) {
-    render();
-  });
+	// cm_opt.mode = 'css';
+	// var css_box = document.querySelector('#css textarea');
+	// var css_editor = CodeMirror.fromTextArea(css_box, cm_opt);
+	//
+  // css_editor.on('change', function (inst, changes) {
+  //   render();
+  // });
 
 	// APP EDITOR
 	cm_opt.mode = 'app';
@@ -109,19 +109,16 @@
 			});`
 		);
 		html_editor.setValue(`<div ng-app = 'myApp'>
-
-	<!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.min.js"></script>-->
-
 	  <div ng-controller='myCtrl'>
 	   <input type='text' ng-model='name' />
 	    {{name}}
 	  </div>
-
-	</div> `
+	</div>
+		<!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.min.js"></script>`
 		);
 
-	appValue(htmlValue);
-	css_editor.setValue('body { color: red; }');
+	// appValue(htmlValue);
+	// css_editor.setValue('body { color: red; }');
 
 
 	// RENDER CALL ON PAGE LOAD
