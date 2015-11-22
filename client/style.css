@@ -23,7 +23,7 @@ html, body {
 
 
 
-#html {
+/*#html {
 	height: 300px;
 	width: 300px;
 	display: inline-block;
@@ -51,9 +51,15 @@ html, body {
 	display: inline-block;
 	z-index: 1;
 	position: relative;
+}*/
+
+.code_box {
+	height: 300px;
+	width: 24%;
+	display: inline-block;
+	z-index: 1;
+	position: relative;
 }
-
-
 
 .code_box h3 {
 	font-size: 13px;

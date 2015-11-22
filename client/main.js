@@ -14,7 +14,7 @@
 
 	var prepareSource = function() {
 		var html = html_editor.getValue(),
-				// css = css_editor.getValue(),
+				css = css_editor.getValue(),
 				app = app_editor.getValue(),
 				controller = controller_editor.getValue(),
 				src = '';
@@ -23,8 +23,8 @@
 		src = base_tpl.replace('</body>', html + '</body>');
 
 		// CSS
-		// css = '<style>' + css + '</style>';
-		// src = src.replace('</head>', css + '</head>');
+		css = '<style>' + css + '</style>';
+		src = src.replace('</head>', css + '</head>');
 
 		// Javascript
 
@@ -59,6 +59,17 @@
 		gutter: true,
 		lineNumbers: true,
 	};
+	var css_opt = {
+		mode: 'text/css',
+		gutter: true,
+		lineNumbers: true,
+	};
+	var js_opt = {
+		mode: 'text/javascript',
+		gutter: true,
+		lineNumbers: true,
+	};
+
 
 	// HTML EDITOR
 	var html_box = document.querySelector('#html textarea');
@@ -69,18 +80,18 @@
   });
 
 	// CSS EDITOR
-	// cm_opt.mode = 'css';
-	// var css_box = document.querySelector('#css textarea');
-	// var css_editor = CodeMirror.fromTextArea(css_box, cm_opt);
-	//
-  // css_editor.on('change', function (inst, changes) {
-  //   render();
-  // });
+	cm_opt.mode = 'css';
+	var css_box = document.querySelector('#css textarea');
+	var css_editor = CodeMirror.fromTextArea(css_box, css_opt);
+
+  css_editor.on('change', function (inst, changes) {
+    render();
+  });
 
 	// APP EDITOR
 	cm_opt.mode = 'app';
 	var app_box = document.querySelector('#app textarea');
-	var app_editor = CodeMirror.fromTextArea(app_box, cm_opt);
+	var app_editor = CodeMirror.fromTextArea(app_box, js_opt);
 
   app_editor.on('change', function (inst, changes) {
     render();
@@ -89,7 +100,7 @@
 	// CONTROLLER EDITOR
 	cm_opt.mode = 'controller';
 	var controller_box = document.querySelector('#controller textarea');
-	var controller_editor = CodeMirror.fromTextArea(controller_box, cm_opt);
+	var controller_editor = CodeMirror.fromTextArea(controller_box, js_opt);
 
 	controller_editor.on('change', function (inst, changes) {
 		render();
@@ -97,31 +108,38 @@
 
 	// SETTING CODE EDITORS INITIAL CONTENT
 
-		app_editor.setValue(`var myApp = angular.module('myApp',[]);
-			myApp.controller('myCtrl',function($scope){
-			  $scope.name = 'Matt';
-
-			   $scope.$watch('name',function(newVal,oldVal){
-			    console.log('old :' + oldVal);
-			    console.log('new :' + newVal);
-			//      console.log($scope)
-			  });
-			});`
+		app_editor.setValue(
+`var myApp = angular
+	.module('myApp',['Codesmith.myCtrl']);
+`
 		);
-		html_editor.setValue(`<div ng-app = 'myApp'>
-
+		html_editor.setValue(
+`<div ng-app = 'myApp'>
 	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.min.js"></script>
-
-	  <div ng-controller='myCtrl'>
-	   <input type='text' ng-model='name' />
-	    {{name}}
-	  </div>
+	<div ng-controller='myCtrl'>
+		<input type='text' ng-model='name' />
+    	{{name}}
 	</div>
-		<!--<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.min.js"></script>`
+</div>
+`
 		);
+		controller_editor.setValue(
+`var myApp = angular
+	.module('Codesmith.myCtrl', [])
+	.controller(myCtrl, ['$scope', '$http', 'myCtrl'])
 
+function myCtrl($scope, $http) {
+  var url = 'http://pokeapi.co/api/v1/pokemon/1/';
+	function getPoke() {
+		$http.get(url).then(function(res) {
+			$scope.name = res.data.name;
+		});
+	}
+	getPoke();
+}
+`);
 	// appValue(htmlValue);
-	// css_editor.setValue('body { color: red; }');
+	css_editor.setValue('body { color: red; }');
 
 
 	// RENDER CALL ON PAGE LOAD
@@ -156,3 +174,9 @@
 	}*/
 
 }());
+
+// TOGGLE CSS EDITOR
+$('#button').click(function() {
+	$('#css').toggle();
+	$
+});
