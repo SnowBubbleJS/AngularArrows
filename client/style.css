@@ -31,7 +31,7 @@ html, body {
 
 .code_box {
 	height: 300px;
-	width: 24.843%;
+	width: 24%;
 	display: inline-block;
 	z-index: 1;
 	position: relative;
@@ -60,7 +60,7 @@ html, body {
 }
 
 .bigBoxes {
-	width: 33.194%;
+	width: 33%;
 	margin: auto;
 }
 
