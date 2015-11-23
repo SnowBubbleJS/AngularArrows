@@ -5,12 +5,19 @@
 }
 
 html, body {
-	width: 100%; height: 100%;
+	width: 100%;
+	height: 100%;
+	margin: auto;
 }
 
 #wrap {
 	width: 100%;
 	height: 100%;
+	text-align: center;
+}
+
+#code_editors > * {
+	text-align: left;
 }
 
 /* Code Editors */
@@ -22,38 +29,13 @@ html, body {
 }*/
 
 
-
-#html {
+.code_box {
 	height: 300px;
-	width: 300px;
-	display: inline-block;
-
-	position: relative;
-}
-
-#css {
-	height: 300px;
-	width: 300px;
+	width: 24%;
 	display: inline-block;
 	z-index: 1;
 	position: relative;
 }
-#app {
-	height: 300px;
-	width: 300px;
-	display: inline-block;
-	z-index: 1;
-	position: relative;
-}
-#controller {
-	height: 300px;
-	width: 300px;
-	display: inline-block;
-	z-index: 1;
-	position: relative;
-}
-
-
 
 .code_box h3 {
 	font-size: 13px;
@@ -77,6 +59,11 @@ html, body {
 	background: #EFEFEF;
 }
 
+.bigBoxes {
+	width: 33%;
+	margin: auto;
+}
+
 /* Output Area */
 #output {
 	position: relative;
@@ -85,10 +72,11 @@ html, body {
 	bottom: 0;
 	height: 150px;
 	width: 80%;
-	margin-top: 5w0px;
 	border: 5px solid #444;
 	border-left-width: 10px;
 	overflow: hidden;
+	margin: auto;
+	margin-top: 50px;
 }
 
 #output iframe {
