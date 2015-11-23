@@ -178,5 +178,5 @@ function myCtrl($scope, $http) {
 // TOGGLE CSS EDITOR
 $('#button').click(function() {
 	$('#css').toggle();
-	$
+	$('.code_box').toggleClass('bigBoxes');
 });
