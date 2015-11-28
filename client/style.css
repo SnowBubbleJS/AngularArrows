@@ -70,7 +70,7 @@ html, body {
 	display: block;
 	clear: both;
 	bottom: 0;
-	height: 150px;
+	height: 500px;
 	width: 80%;
 	border: 5px solid #444;
 	border-left-width: 10px;
@@ -80,7 +80,33 @@ html, body {
 }
 
 #output iframe {
-	height: 150px;
+	height: 500px;
 	width: 100%;
 	border: 0;
+}
+
+.highlight {
+	background: yellow;
+}
+
+/*For button to stay on top of SVG*/
+#button {
+	position: absolute;
+	z-index: 99;
+}
+
+svg {
+	position: absolute;
+	z-index: 10;
+	top: 0;
+	left: 0;
+}
+
+path {
+  fill: none;
+  stroke: #000;
+}
+
+toggleTop {
+	z-index: 98;
 }
