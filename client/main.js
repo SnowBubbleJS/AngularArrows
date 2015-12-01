@@ -8,9 +8,12 @@
 (function() {
 	var word1, word2, appPos, controllerPos, SVGPresent = 0;
 
+
 	function underlineWord(query) {
+
 		var jquerySelection = $(query);
 		var matchContainer = [];
+
 		for (var i = 0; i < jquerySelection.length; i++) {
 			var selection = jquerySelection[i];
 			while(selection) {
@@ -22,16 +25,24 @@
 				}
 			}
 		}
+
 		if(matchContainer[0].innerHTML === matchContainer[1].innerHTML) {
-			word1 = $(matchContainer[0]).position();
-			word2 = $(matchContainer[1]).position();
+			word1 = $(matchContainer[0]).offset();
+			word2 = $(matchContainer[1]).offset();
 			matchContainer.forEach(function(item) {
-				item.className += ' highlight'
-			})
+				item.className += ' highlight';
+			});
+		}else if(matchContainer[0].innerHTML !== matchContainer[1].innerHTML){
+			console.log('here');
+			$('#CtrlSVG').detach();
+
 		}
+
+
 	}
 
 	function toggleSVG() {
+
 		// Curved line
 		var curved = d3.svg.line()
 				.x(function(d) { return d.x; })
@@ -41,24 +52,28 @@
 				appPos = $('#app').position();
 				controllerPos = $('#controller').position();
 		// Defining variables to save time in 'points' step
-		var x1 = appPos.left + 30 + word1.left;
-		var y1 = appPos.top + 60 + word1.top;
-		var x2 = controllerPos.left + 30 + word2.left;
-		var y2 = controllerPos.top + 60 + word2.top;
+
+		var x1 =  word1.left;
+		var y1 = word1.top+10;
+		var x2 = word2.left;
+		var y2 =  word2.top+10;
+
 
 		// Points on line... need min 3 points
-		var points = [ { x: x1, y: y1 },{ x: (x1+x2)/2, y: y2+30 },{ x: x2, y: y2 }]
+		var points = [ { x: x1, y: y1 },{ x: (x1+x2)/2, y: y2+30 },{ x: x2, y: y2 }];
 
 		// Creating container svg for path
 		var lineGraph1 = d3.select('body')
 			.append("svg:svg")
 			.attr("width", '100%')
 			.attr("height", '100%')
-			.attr("id", "CtrlSVG");
+			.attr("id", "CtrlSVG")
+			.attr("opacity",0.3)
+			.attr("stroke-width",1.3);
 
 		// Actual path appended into svg
 		lineGraph1.append('path')
-			.attr('d', curved(points))
+			.attr('d', curved(points));
 		// OLD LINE, ONLY STRAIGHT LINE... USE WITH LINEGRAPH1 (but without append('path'))
 		// var myLine1 = lineGraph1.insert("svg:line")
 		// 	.attr("x1", appPos.left + 30 + word1.left)
@@ -108,6 +123,7 @@
 	};
 
 	var render = function() {
+
 		var source = prepareSource();
 		var iframe = document.querySelector('#output iframe'),
 				iframe_doc = iframe.contentDocument;
@@ -119,10 +135,16 @@
 		$(document).ready(function() {
 			underlineWord('.cm-property:contains(module)');
 			// To only create one SVG
-			if(SVGPresent === 0) {
-				toggleSVG();
-				SVGPresent++;
-			}
+			// if(SVGPresent === 0) {
+			// 	toggleSVG();
+			// 	SVGPresent++;
+			// }
+
+$('#CtrlSVG').remove();
+			toggleSVG();
+			underlineWord('.cm-property:contains(module)');
+
+
 		}
 	);
 			// underlineWord('.cm-string:contains(Codesmith)')
@@ -189,6 +211,9 @@
 		// 	console.log(inst.doc.children[0].lines[i]);
 		// }
     render();
+		setTimeout(function(){
+			render();
+		},0);
   });
 
 	// CONTROLLER EDITOR
@@ -198,8 +223,11 @@
 
 
 	controller_editor.on('change', function (inst, changes) {
-		
+
 		render();
+		setTimeout(function(){
+			render();
+		},0);
 	});
 
 	// SETTING CODE EDITORS INITIAL CONTENT
@@ -279,6 +307,7 @@ function myCtrl($scope, $http) {
 		if(document.getElementById('CtrlSVG')) {
 			$('#CtrlSVG').remove();
 		} else {
+			underlineWord('.cm-property:contains(module)');
 			toggleSVG();
 		}
 	});
