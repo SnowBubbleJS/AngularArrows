@@ -1,6 +1,6 @@
 /*
 * PROBLEMS, YOU CAN CTRL+F EACH PROBLEM TO JUMP TO CODE SECTION...
-*
+* html highlighting does not work
 *
 */
 
@@ -13,16 +13,33 @@
 			controllerPos = $('#controller').position(),
 			SVGPresent = 0;
 
+	// Alt is used to signal that it's looking inside the HTML & Controller.js
+	// html highlighting does not work
 	function underlineWord(query, alt) {
 		var jquerySelection = $(query);
 		var matchContainer = [];
+
 		if(alt) {
-			htmlWord1 = jquerySelection.offset();
-			console.log(htmlWord1);
+			var temp = jquerySelection[0].nextElementSibling;
 			var ctrlName = jquerySelection[0].nextElementSibling.innerHTML;
+			matchContainer.push(jquerySelection[0].nextElementSibling);
+			matchContainer.push($('.cm-variable:contains('+ctrlName+')')[0]);
+			htmlWord1 = $(temp).offset();
 			htmlWord2 = $('.cm-variable:contains('+ctrlName+')').offset();
-			console.log(htmlWord2);
+
+			if(matchContainer[0].innerHTML === matchContainer[1].innerHTML) {
+				matchContainer.forEach(function(item) {
+					if($(item)[0].className.indexOf('highlight') === -1) {
+						item.className += ' highlight';
+					}
+				});
+			}
+			else if(matchContainer[0].innerHTML !== matchContainer[1].innerHTML){
+				$('#CtrlSVG').detach();
+			}
+
 		}
+		// For APP.JS & CONTROLLER.JS highlighting
 		else {
 			for (var i = 0; i < jquerySelection.length; i++) {
 				var selection = jquerySelection[i];
@@ -44,8 +61,14 @@
 						item.className += ' highlight';
 					}
 				});
+			}else if(matchContainer[0].innerHTML !== matchContainer[1].innerHTML){
+				console.log('here');
+				$('#CtrlSVG').detach();
+				console.log($('#CtrlSVG'));
 			}
 		}
+
+
 	}
 
 	function toggleSVG(word1, word2) {
@@ -56,10 +79,13 @@
 				.interpolate("cardinal")
 				.tension(0);
 		// Defining variables to save time in 'points' step
-		var x1 = word1.left;
-		var y1 = word1.top + 10;
+
+		var x1 =  word1.left;
+		var y1 = word1.top+10;
 		var x2 = word2.left;
-		var y2 = word2.top + 10;
+		var y2 =  word2.top+10;
+
+
 		// Points on line... need min 3 points
 		var points = [ { x: x1, y: y1 },{ x: (x1+x2)/2, y: y2+30 },{ x: x2, y: y2 }];
 
@@ -68,7 +94,9 @@
 			.append("svg:svg")
 			.attr("width", '100%')
 			.attr("height", '100%')
-			.attr("class", "CtrlSVG");
+			.attr("id", "CtrlSVG")
+			.attr("opacity",0.3)
+			.attr("stroke-width",1.3);
 
 		// Actual path appended into svg
 		lineGraph1.append('path')
@@ -124,11 +152,15 @@
 		iframe_doc.close();
 
 		$(document).ready(function() {
+			// underlineWord('.cm-attribute:contains(ng-controller)', 1);
+			$('#CtrlSVG').detach();
+			$('#CtrlSVG').detach();
 			underlineWord('.cm-property:contains(module)');
 			underlineWord('.cm-attribute:contains(ng-controller)', 1);
-			$('.CtrlSVG').remove();
 			toggleSVG(appWord1, appWord2);
 			toggleSVG(htmlWord1, htmlWord2);
+			underlineWord('.cm-property:contains(module)');
+			underlineWord('.cm-attribute:contains(ng-controller)', 1);
 		});
 	};
 
@@ -159,6 +191,9 @@
 
   html_editor.on('change', function (inst, changes) {
     render();
+		setTimeout(function(){
+			render();
+		},0);
   });
 
 	// CSS EDITOR
@@ -177,6 +212,9 @@
 
   app_editor.on('change', function (inst, changes) {
     render();
+		setTimeout(function(){
+			render();
+		},0);
   });
 
 	// CONTROLLER EDITOR
@@ -184,8 +222,13 @@
 	var controller_box = document.querySelector('#controller textarea');
 	var controller_editor = CodeMirror.fromTextArea(controller_box, js_opt);
 
+
 	controller_editor.on('change', function (inst, changes) {
+
 		render();
+		setTimeout(function(){
+			render();
+		},0);
 	});
 
 	// SETTING CODE EDITORS INITIAL CONTENT
@@ -262,11 +305,11 @@ function myCtrl($scope, $http) {
 	});
 
 	$('#SVGButton').click(function() {
-		if(document.getElementsByClassName('CtrlSVG').length > 0) {
-			console.log(document.getElementsByClassName('CtrlSVG'));
-			$('.CtrlSVG').remove();
+		if(document.getElementById('CtrlSVG')) {
+			console.log(document.getElementById('CtrlSVG'));
+			$('#CtrlSVG').remove();
 		} else {
-			render();
+			underlineWord('.cm-property:contains(module)');
 			toggleSVG();
 		}
 	});
