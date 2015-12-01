@@ -35,11 +35,6 @@ html, body {
 
 
 
-/*#textController{
-	background-color: rgba(255, 255, 255, .1);
-		background: rgba(255, 255, 255, .1);
-}*/
-
 .code_box h3 {
 	font-size: 13px;
 	height: 30px;
@@ -127,8 +122,20 @@ path {
   stroke: #000;
 }
 
-toggleTop {
-	z-index: 98;
+.code_box {
+	height: 300px;
+	width: 24%;
+	display: inline-block;
+	z-index: 1;
+	position: relative;
+}
+
+.cm-s-default {
+	background: none;
+}
+
+.CodeMirror-gutters {
+	background: none;
 }
 
 .CodeMirror-scroll {

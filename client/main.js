@@ -11,11 +11,8 @@
 	function underlineWord(query) {
 		var jquerySelection = $(query);
 		var matchContainer = [];
-		// if(word1 !== null) {
-		// console.log(jquerySelection);
 		for (var i = 0; i < jquerySelection.length; i++) {
 			var selection = jquerySelection[i];
-			// console.log(selection);
 			while(selection) {
 				if(selection.nextElementSibling) {
 					selection = selection.nextElementSibling;
@@ -25,30 +22,53 @@
 				}
 			}
 		}
-
-		matchContainer.forEach(function(item) {
-			item.className += ' highlight'
-			console.log(item);
-		})
-
-		// 	if($('.cm-property:contains(module)')) {
-		// 	word1 = $('.cm-string:contains(Codesmith)').first().position();
-		// 	word2 = $('.cm-string:contains(Codesmith)').last().position();
-		// 	$('.cm-string:contains(Codesmith)')[0].className += ' highlight';
-		// 	$('.cm-string:contains(Codesmith)')[1].className += ' highlight';
-		// }
-		// if($(query)[0]) {
-		// 		if($(query)[0].className.indexOf('highlight') <= 0) {
-		// 		word1 = $(query).first().position();
-		// 		word2 = $(query).last().position();
-		// 		$(query)[0].className += ' highlight';
-		// 		$(query)[1].className += ' highlight';
-		// 	}
-		// 	appPos = $('#app').position();
-		// 	controllerPos = $('#controller').position();
-		// }
-		// }
+		if(matchContainer[0].innerHTML === matchContainer[1].innerHTML) {
+			word1 = $(matchContainer[0]).position();
+			word2 = $(matchContainer[1]).position();
+			matchContainer.forEach(function(item) {
+				item.className += ' highlight'
+			})
+		}
 	}
+
+	function toggleSVG() {
+		// Curved line
+		var curved = d3.svg.line()
+				.x(function(d) { return d.x; })
+				.y(function(d) { return d.y; })
+				.interpolate("cardinal")
+				.tension(0);
+				appPos = $('#app').position();
+				controllerPos = $('#controller').position();
+		// Defining variables to save time in 'points' step
+		var x1 = appPos.left + 30 + word1.left;
+		var y1 = appPos.top + 60 + word1.top;
+		var x2 = controllerPos.left + 30 + word2.left;
+		var y2 = controllerPos.top + 60 + word2.top;
+
+		// Points on line... need min 3 points
+		var points = [ { x: x1, y: y1 },{ x: (x1+x2)/2, y: y2+30 },{ x: x2, y: y2 }]
+
+		// Creating container svg for path
+		var lineGraph1 = d3.select('body')
+			.append("svg:svg")
+			.attr("width", '100%')
+			.attr("height", '100%')
+			.attr("id", "CtrlSVG");
+
+		// Actual path appended into svg
+		lineGraph1.append('path')
+			.attr('d', curved(points))
+		// OLD LINE, ONLY STRAIGHT LINE... USE WITH LINEGRAPH1 (but without append('path'))
+		// var myLine1 = lineGraph1.insert("svg:line")
+		// 	.attr("x1", appPos.left + 30 + word1.left)
+		// 	.attr("y1", appPos.top + 60 + word1.top)
+		// 	.attr("x2", controllerPos.left + 30 + word2.left)
+		// 	.attr("y2", controllerPos.top + 60 + word2.top)
+		// 	.style("stroke", "rgb(6,120,155)");
+	} // ToggleSVG function
+
+
 	// Base template
 	var base_tpl =
 			"<!doctype html>\n" +
@@ -97,47 +117,6 @@
 		// CREATE LINE
 		// ADD HIGHLIGHT CLASS TO 2 STRINGS THAT CONTAIN 'Codesmith'
 		$(document).ready(function() {
-
-			function toggleSVG() {
-				// Curved line
-				var curved = d3.svg.line()
-						.x(function(d) { return d.x; })
-						.y(function(d) { return d.y; })
-						.interpolate("cardinal")
-						.tension(0);
-						appPos = $('#app').position();
-						controllerPos = $('#controller').position();
-				// Defining variables to save time in 'points' step
-				var x1 = appPos.left + 30 + word1.left;
-				var y1 = appPos.top + 60 + word1.top;
-				var x2 = controllerPos.left + 30 + word2.left;
-				var y2 = controllerPos.top + 60 + word2.top;
-
-				// Points on line... need min 3 points
-				var points = [ { x: x1, y: y1 },{ x: (x1+x2)/2, y: y2+30 },{ x: x2, y: y2 }]
-
-				// Creating container svg for path
-				var lineGraph1 = d3.select('body')
-					.append("svg:svg")
-					.attr("width", '100%')
-					.attr("height", '100%')
-					.attr("id", "CtrlSVG");
-
-				// Actual path appended into svg
-				lineGraph1.append('path')
-					.attr('d', curved(points))
-
-				// OLD LINE, ONLY STRAIGHT LINE... USE WITH LINEGRAPH1 (but without append('path'))
-				// var myLine1 = lineGraph1.insert("svg:line")
-				// 	.attr("x1", appPos.left + 30 + word1.left)
-				// 	.attr("y1", appPos.top + 60 + word1.top)
-				// 	.attr("x2", controllerPos.left + 30 + word2.left)
-				// 	.attr("y2", controllerPos.top + 60 + word2.top)
-				// 	.style("stroke", "rgb(6,120,155)");
-			} // ToggleSVG function
-// The HIGHLIGHT class goes over text selection...
-
-
 			underlineWord('.cm-property:contains(module)');
 			// To only create one SVG
 			if(SVGPresent === 0) {
@@ -290,15 +269,17 @@ function myCtrl($scope, $http) {
 		cms[i].style.height = '100%';
 	}*/
 
+	// TOGGLE CSS EDITOR
+	$('#button').click(function() {
+		$('#css').toggle();
+		$('.code_box').toggleClass('bigBoxes');
+	});
+
+	$('#SVGButton').click(function() {
+		if(document.getElementById('CtrlSVG')) {
+			$('#CtrlSVG').remove();
+		} else {
+			toggleSVG();
+		}
+	});
 }());
-
-
-// TOGGLE CSS EDITOR
-$('#button').click(function() {
-	$('#css').toggle();
-	$('.code_box').toggleClass('bigBoxes');
-});
-
-$('#SVGButton').click(function() {
-	$('#CtrlSVG').toggle();
-});
