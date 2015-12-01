@@ -125,7 +125,7 @@
 
 		$(document).ready(function() {
 			underlineWord('.cm-property:contains(module)');
-			underlineWord('.cm-attribute:contains(ng-controller)', 1)
+			underlineWord('.cm-attribute:contains(ng-controller)', 1);
 			$('.CtrlSVG').remove();
 			toggleSVG(appWord1, appWord2);
 			toggleSVG(htmlWord1, htmlWord2);
