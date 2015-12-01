@@ -4,10 +4,14 @@
     <meta charset="utf-8">
     <title></title>
 
+    <script type="text/javascript" src="http://mbostock.github.com/d3/d3.js"></script>
     <link rel="stylesheet" href="http://codemirror.net/lib/codemirror.css">
-
   </head>
   <body>
+    <div>
+      <button type="button" name="cssButton" id="button">CSS</button>
+      <button type="button" name="SVGButton" id="SVGButton">SVG</button>
+    </div>
     <div id="wrap">
 
     	<!-- Code Editors -->
@@ -24,9 +28,9 @@
     			<h3>App. js</h3>
     			<textarea name="app"></textarea>
     		</div>
-        <div id="controller" class="code_box">
+        <div  id="controller" class="code_box">
           <h3>Controller. js</h3>
-          <textarea name="controller"></textarea>
+          <textarea  name="controller"></textarea>
         </div>
     	</section>
 
@@ -36,7 +40,9 @@
     	</section>
 
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.0/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.9/angular.min.js"></script>
+
     <script src="http://codemirror.net/lib/codemirror.js"></script>
 
     <!-- For HTML/XML -->
