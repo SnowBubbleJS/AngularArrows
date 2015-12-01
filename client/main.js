@@ -27,7 +27,7 @@
 			htmlWord1 = $(temp).offset();
 			htmlWord2 = $('.cm-variable:contains('+ctrlName+')').offset();
 
-			if(matchContainer[0].innerHTML === matchContainer[1].innerHTML) {
+			if(matchContainer[0].innerHTML.substr(1,matchContainer[0].innerHTML.length -2) === matchContainer[1].innerHTML) {
 				matchContainer.forEach(function(item) {
 					if($(item)[0].className.indexOf('highlight') === -1) {
 						item.className += ' highlight';
