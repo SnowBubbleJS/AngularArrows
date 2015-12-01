@@ -4,9 +4,12 @@
 *
 */
 
-
 (function() {
-	var word1, word2, appPos, controllerPos, SVGPresent = 0;
+	var word1,
+			word2,
+			appPos = $('#app').position(),
+			controllerPos = $('#controller').position(),
+			SVGPresent = 0;
 
 	function underlineWord(query) {
 		var jquerySelection = $(query);
@@ -22,12 +25,15 @@
 				}
 			}
 		}
+
 		if(matchContainer[0].innerHTML === matchContainer[1].innerHTML) {
-			word1 = $(matchContainer[0]).position();
-			word2 = $(matchContainer[1]).position();
+			word1 = $(matchContainer[0]).offset();
+			word2 = $(matchContainer[1]).offset();
 			matchContainer.forEach(function(item) {
-				item.className += ' highlight'
-			})
+				if($(item)[0].className.indexOf('highlight') === -1) {
+					item.className += ' highlight';
+				}
+			});
 		}
 	}
 
@@ -38,16 +44,13 @@
 				.y(function(d) { return d.y; })
 				.interpolate("cardinal")
 				.tension(0);
-				appPos = $('#app').position();
-				controllerPos = $('#controller').position();
 		// Defining variables to save time in 'points' step
-		var x1 = appPos.left + 30 + word1.left;
-		var y1 = appPos.top + 60 + word1.top;
-		var x2 = controllerPos.left + 30 + word2.left;
-		var y2 = controllerPos.top + 60 + word2.top;
-
+		var x1 = word1.left;
+		var y1 = word1.top + 10;
+		var x2 = word2.left;
+		var y2 = word2.top + 10;
 		// Points on line... need min 3 points
-		var points = [ { x: x1, y: y1 },{ x: (x1+x2)/2, y: y2+30 },{ x: x2, y: y2 }]
+		var points = [ { x: x1, y: y1 },{ x: (x1+x2)/2, y: y2+30 },{ x: x2, y: y2 }];
 
 		// Creating container svg for path
 		var lineGraph1 = d3.select('body')
@@ -58,14 +61,7 @@
 
 		// Actual path appended into svg
 		lineGraph1.append('path')
-			.attr('d', curved(points))
-		// OLD LINE, ONLY STRAIGHT LINE... USE WITH LINEGRAPH1 (but without append('path'))
-		// var myLine1 = lineGraph1.insert("svg:line")
-		// 	.attr("x1", appPos.left + 30 + word1.left)
-		// 	.attr("y1", appPos.top + 60 + word1.top)
-		// 	.attr("x2", controllerPos.left + 30 + word2.left)
-		// 	.attr("y2", controllerPos.top + 60 + word2.top)
-		// 	.style("stroke", "rgb(6,120,155)");
+			.attr('d', curved(points));
 	} // ToggleSVG function
 
 
@@ -119,14 +115,9 @@
 		$(document).ready(function() {
 			underlineWord('.cm-property:contains(module)');
 			// To only create one SVG
-			if(SVGPresent === 0) {
-				toggleSVG();
-				SVGPresent++;
-			}
-		}
-	);
-			// underlineWord('.cm-string:contains(Codesmith)')
-
+			$('#CtrlSVG').remove();
+			toggleSVG();
+		});
 	};
 
 
@@ -173,21 +164,6 @@
 	var app_editor = CodeMirror.fromTextArea(app_box, js_opt);
 
   app_editor.on('change', function (inst, changes) {
-		// inst.display.lineDiv.className += ' highlight';
-		// inst.display.lineDiv.firstChild.lastChild.className += 'highlight';
-		// console.log(inst.display.lineDiv);
-
-
-// HIGHLIGHT WORD
-		// if(inst.display.view[0]) {
-		// 	word = inst.display.view[1].text.firstChild.querySelectorAll('span')
-		// 	wordPos = $(word[3]).position();
-		// 	word[3].className += ' highlight'
-		// 	console.log(inst.display.view[0].text.firstChild.firstChild.className);
-		// }
-		// for(var i = 0, j = inst.doc.children[0].lines.length; i < j; i++) {
-		// 	console.log(inst.doc.children[0].lines[i]);
-		// }
     render();
   });
 
@@ -277,6 +253,7 @@ function myCtrl($scope, $http) {
 		if(document.getElementById('CtrlSVG')) {
 			$('#CtrlSVG').remove();
 		} else {
+			render();
 			toggleSVG();
 		}
 	});
