@@ -168,7 +168,9 @@
 	var controller_box = document.querySelector('#controller textarea');
 	var controller_editor = CodeMirror.fromTextArea(controller_box, js_opt);
 
+
 	controller_editor.on('change', function (inst, changes) {
+		
 		render();
 	});
 
