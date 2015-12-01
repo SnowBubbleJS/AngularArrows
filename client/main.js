@@ -4,9 +4,12 @@
 *
 */
 
-
 (function() {
-	var word1, word2, appPos, controllerPos, SVGPresent = 0;
+	var word1,
+			word2,
+			appPos = $('#app').position(),
+			controllerPos = $('#controller').position(),
+			SVGPresent = 0;
 
 
 	function underlineWord(query) {
@@ -49,8 +52,6 @@
 				.y(function(d) { return d.y; })
 				.interpolate("cardinal")
 				.tension(0);
-				appPos = $('#app').position();
-				controllerPos = $('#controller').position();
 		// Defining variables to save time in 'points' step
 
 		var x1 =  word1.left;
@@ -74,13 +75,6 @@
 		// Actual path appended into svg
 		lineGraph1.append('path')
 			.attr('d', curved(points));
-		// OLD LINE, ONLY STRAIGHT LINE... USE WITH LINEGRAPH1 (but without append('path'))
-		// var myLine1 = lineGraph1.insert("svg:line")
-		// 	.attr("x1", appPos.left + 30 + word1.left)
-		// 	.attr("y1", appPos.top + 60 + word1.top)
-		// 	.attr("x2", controllerPos.left + 30 + word2.left)
-		// 	.attr("y2", controllerPos.top + 60 + word2.top)
-		// 	.style("stroke", "rgb(6,120,155)");
 	} // ToggleSVG function
 
 
@@ -195,21 +189,6 @@ $('#CtrlSVG').remove();
 	var app_editor = CodeMirror.fromTextArea(app_box, js_opt);
 
   app_editor.on('change', function (inst, changes) {
-		// inst.display.lineDiv.className += ' highlight';
-		// inst.display.lineDiv.firstChild.lastChild.className += 'highlight';
-		// console.log(inst.display.lineDiv);
-
-
-// HIGHLIGHT WORD
-		// if(inst.display.view[0]) {
-		// 	word = inst.display.view[1].text.firstChild.querySelectorAll('span')
-		// 	wordPos = $(word[3]).position();
-		// 	word[3].className += ' highlight'
-		// 	console.log(inst.display.view[0].text.firstChild.firstChild.className);
-		// }
-		// for(var i = 0, j = inst.doc.children[0].lines.length; i < j; i++) {
-		// 	console.log(inst.doc.children[0].lines[i]);
-		// }
     render();
 		setTimeout(function(){
 			render();
