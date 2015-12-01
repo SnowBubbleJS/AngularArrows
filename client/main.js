@@ -1,51 +1,77 @@
 /*
 * PROBLEMS, YOU CAN CTRL+F EACH PROBLEM TO JUMP TO CODE SECTION...
-* FIXED WITH UNDERLINE: The HIGHLIGHT class goes over text selection...
+* html highlighting does not work
 *
 */
 
 (function() {
-	var word1,
-			word2,
+	var appWord1,
+			appWord2,
+			htmlWord1,
+			htmlWord2,
 			appPos = $('#app').position(),
 			controllerPos = $('#controller').position(),
 			SVGPresent = 0;
 
-
-	function underlineWord(query) {
-
+	// Alt is used to signal that it's looking inside the HTML & Controller.js
+	// html highlighting does not work
+	function underlineWord(query, alt) {
 		var jquerySelection = $(query);
 		var matchContainer = [];
 
-		for (var i = 0; i < jquerySelection.length; i++) {
-			var selection = jquerySelection[i];
-			while(selection) {
-				if(selection.nextElementSibling) {
-					selection = selection.nextElementSibling;
-				} else {
-					matchContainer.push(selection);
-					selection = null;
+		if(alt) {
+			var temp = jquerySelection[0].nextElementSibling;
+			var ctrlName = jquerySelection[0].nextElementSibling.innerHTML;
+			matchContainer.push(jquerySelection[0].nextElementSibling);
+			matchContainer.push($('.cm-variable:contains('+ctrlName+')')[0]);
+			htmlWord1 = $(temp).offset();
+			htmlWord2 = $('.cm-variable:contains('+ctrlName+')').offset();
+
+			if(matchContainer[0].innerHTML === matchContainer[1].innerHTML) {
+				matchContainer.forEach(function(item) {
+					if($(item)[0].className.indexOf('highlight') === -1) {
+						item.className += ' highlight';
+					}
+				});
+			}
+			else if(matchContainer[0].innerHTML !== matchContainer[1].innerHTML){
+				$('#CtrlSVG').detach();
+			}
+
+		}
+		// For APP.JS & CONTROLLER.JS highlighting
+		else {
+			for (var i = 0; i < jquerySelection.length; i++) {
+				var selection = jquerySelection[i];
+				while(selection) {
+					if(selection.nextElementSibling) {
+						selection = selection.nextElementSibling;
+					} else {
+						matchContainer.push(selection);
+						selection = null;
+					}
 				}
 			}
-		}
 
-		if(matchContainer[0].innerHTML === matchContainer[1].innerHTML) {
-			word1 = $(matchContainer[0]).offset();
-			word2 = $(matchContainer[1]).offset();
-			matchContainer.forEach(function(item) {
-				item.className += ' highlight';
-			});
-		}else if(matchContainer[0].innerHTML !== matchContainer[1].innerHTML){
-			console.log('here');
-			$('#CtrlSVG').detach();
-
+			if(matchContainer[0].innerHTML === matchContainer[1].innerHTML) {
+				appWord1 = $(matchContainer[0]).offset();
+				appWord2 = $(matchContainer[1]).offset();
+				matchContainer.forEach(function(item) {
+					if($(item)[0].className.indexOf('highlight') === -1) {
+						item.className += ' highlight';
+					}
+				});
+			}else if(matchContainer[0].innerHTML !== matchContainer[1].innerHTML){
+				console.log('here');
+				$('#CtrlSVG').detach();
+				console.log($('#CtrlSVG'));
+			}
 		}
 
 
 	}
 
-	function toggleSVG() {
-
+	function toggleSVG(word1, word2) {
 		// Curved line
 		var curved = d3.svg.line()
 				.x(function(d) { return d.x; })
@@ -124,25 +150,18 @@
 		iframe_doc.open();
 		iframe_doc.write(source);
 		iframe_doc.close();
-		// CREATE LINE
-		// ADD HIGHLIGHT CLASS TO 2 STRINGS THAT CONTAIN 'Codesmith'
+
 		$(document).ready(function() {
+			// underlineWord('.cm-attribute:contains(ng-controller)', 1);
+			$('#CtrlSVG').detach();
+			$('#CtrlSVG').detach();
 			underlineWord('.cm-property:contains(module)');
-			// To only create one SVG
-			// if(SVGPresent === 0) {
-			// 	toggleSVG();
-			// 	SVGPresent++;
-			// }
-
-$('#CtrlSVG').remove();
-			toggleSVG();
+			underlineWord('.cm-attribute:contains(ng-controller)', 1);
+			toggleSVG(appWord1, appWord2);
+			toggleSVG(htmlWord1, htmlWord2);
 			underlineWord('.cm-property:contains(module)');
-
-
-		}
-	);
-			// underlineWord('.cm-string:contains(Codesmith)')
-
+			underlineWord('.cm-attribute:contains(ng-controller)', 1);
+		});
 	};
 
 
@@ -172,6 +191,9 @@ $('#CtrlSVG').remove();
 
   html_editor.on('change', function (inst, changes) {
     render();
+		setTimeout(function(){
+			render();
+		},0);
   });
 
 	// CSS EDITOR
@@ -284,6 +306,7 @@ function myCtrl($scope, $http) {
 
 	$('#SVGButton').click(function() {
 		if(document.getElementById('CtrlSVG')) {
+			console.log(document.getElementById('CtrlSVG'));
 			$('#CtrlSVG').remove();
 		} else {
 			underlineWord('.cm-property:contains(module)');
