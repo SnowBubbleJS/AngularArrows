@@ -11,36 +11,63 @@
 			htmlWord2,
 			appPos = $('#app').position(),
 			controllerPos = $('#controller').position(),
+			matchContainer = [];
+			matchContainerHTML = [];
 			SVGPresent = 0;
 
 	// Alt is used to signal that it's looking inside the HTML & Controller.js
 	// html highlighting does not work
 	function underlineWord(query, alt) {
 		var jquerySelection = $(query);
-		var matchContainer = [];
 
 		if(alt) {
 			var temp = jquerySelection[0].nextElementSibling;
 			var ctrlName = jquerySelection[0].nextElementSibling.innerHTML;
-			matchContainer.push(jquerySelection[0].nextElementSibling);
-			matchContainer.push($('.cm-variable:contains('+ctrlName+')')[0]);
-			htmlWord1 = $(temp).offset();
-			htmlWord2 = $('.cm-variable:contains('+ctrlName+')').offset();
-
-			if(matchContainer[0].innerHTML.substr(1,matchContainer[0].innerHTML.length -2) === matchContainer[1].innerHTML) {
-				matchContainer.forEach(function(item) {
-					if($(item)[0].className.indexOf('highlight') === -1) {
-						item.className += ' highlight';
+			if($('.cm-variable:contains('+ctrlName+')')[0]) {
+				matchContainerHTML = [];
+				matchContainerHTML.push(jquerySelection[0].nextElementSibling);
+				matchContainerHTML.push($('.cm-variable:contains('+ctrlName+')')[0]);
+				// console.log(matchContainerHTML);
+				htmlWord1 = $(temp);
+				htmlWord2 = matchContainerHTML[1];
+				if(matchContainerHTML[1] !== undefined) {
+					if(matchContainerHTML[0].innerHTML.substr(1,matchContainerHTML[0].innerHTML.length -2) === matchContainerHTML[1].innerHTML) {
+						matchContainerHTML.forEach(function(item) {
+							if($(item)[0].className.indexOf('highlight') === -1) {
+								item.className += ' highlight';
+							}
+						});
 					}
-				});
 			}
-			else if(matchContainer[0].innerHTML !== matchContainer[1].innerHTML){
-				$('#CtrlSVG').detach();
+				// else if(matchContainerHTML[0].innerHTML !== matchContainerHTML[1].innerHTML){
+					// var indexOfHighlight2 = htmlWord2[0].className.indexOf(' highlight');
+					// htmlWord2[0].className = htmlWord2[0].className.substr(0, indexOfHighlight2);
+					// var indexOfHighlight1 = htmlWord1[0].className.indexOf(' highlight');
+					// htmlWord1[0].className = htmlWord1[0].className.substr(0, indexOfHighlight1);
+					// $('#CtrlSVG').detach();
+				// }
+			} else {
+				var indexOfHighlight2 = htmlWord2.className.indexOf('highlight');
+				console.log(indexOfHighlight2);
+				if(indexOfHighlight2 != -1) {
+					// console.log(htmlWord2.className);
+					htmlWord2.className = htmlWord2.className.substr(0, indexOfHighlight2);
+	// console.log(indexOfHighlight2);
+				} else {
+					$('#CtrlSVGHTML').detach();
+
+				}
+			}
+			if($(htmlWord2).offset().top === 0 && $(htmlWord2).offset().left === 0) {
+				var indexOfHighlight1 = htmlWord1[0].className.indexOf(' highlight');
+				htmlWord1[0].className = htmlWord1[0].className.substr(0, indexOfHighlight1);
+				$('#CtrlSVGHTML').detach();
 			}
 
 		}
 		// For APP.JS & CONTROLLER.JS highlighting
 		else {
+			matchContainer = [];
 			for (var i = 0; i < jquerySelection.length; i++) {
 				var selection = jquerySelection[i];
 				while(selection) {
@@ -54,24 +81,26 @@
 			}
 
 			if(matchContainer[0].innerHTML === matchContainer[1].innerHTML) {
-				appWord1 = $(matchContainer[0]).offset();
-				appWord2 = $(matchContainer[1]).offset();
+				appWord1 = $(matchContainer[0]);
+				appWord2 = $(matchContainer[1]);
 				matchContainer.forEach(function(item) {
 					if($(item)[0].className.indexOf('highlight') === -1) {
 						item.className += ' highlight';
 					}
 				});
 			}else if(matchContainer[0].innerHTML !== matchContainer[1].innerHTML){
-				console.log('here');
+				var indexOfHighlight2 = appWord2[0].className.indexOf(' highlight');
+				appWord2[0].className = appWord2[0].className.substr(0, indexOfHighlight2);
+				var indexOfHighlight1 = appWord1[0].className.indexOf(' highlight');
+				appWord1[0].className = appWord1[0].className.substr(0, indexOfHighlight1);
 				$('#CtrlSVG').detach();
-				console.log($('#CtrlSVG'));
 			}
 		}
 
 
 	}
 
-	function toggleSVG(word1, word2) {
+	function toggleSVG(word1, word2, alt) {
 		// Curved line
 		var curved = d3.svg.line()
 				.x(function(d) { return d.x; })
@@ -80,27 +109,42 @@
 				.tension(0);
 		// Defining variables to save time in 'points' step
 
-		var x1 =  word1.left;
-		var y1 = word1.top+10;
-		var x2 = word2.left;
-		var y2 =  word2.top+10;
+		var x1 =  $(word1).offset().left;
+		var y1 = $(word1).offset().top+10;
+		var x2 = $(word2).offset().left;
+		var y2 =  $(word2).offset().top+10;
 
 
 		// Points on line... need min 3 points
 		var points = [ { x: x1, y: y1 },{ x: (x1+x2)/2, y: y2+30 },{ x: x2, y: y2 }];
 
-		// Creating container svg for path
-		var lineGraph1 = d3.select('body')
-			.append("svg:svg")
-			.attr("width", '100%')
-			.attr("height", '100%')
-			.attr("id", "CtrlSVG")
-			.attr("opacity",0.3)
-			.attr("stroke-width",1.3);
+		if(alt === 1) {
+			var lineGraph1 = d3.select('body')
+				.append("svg:svg")
+				.attr("width", '100%')
+				.attr("height", '100%')
+				.attr("id", "CtrlSVGHTML")
+				.attr("opacity",0.3)
+				.attr("stroke-width",1.3);
 
-		// Actual path appended into svg
-		lineGraph1.append('path')
-			.attr('d', curved(points));
+			// Actual path appended into svg
+			lineGraph1.append('path')
+				.attr('d', curved(points));
+		} else {
+			// Creating container svg for path
+			var lineGraph1 = d3.select('body')
+				.append("svg:svg")
+				.attr("width", '100%')
+				.attr("height", '100%')
+				.attr("id", "CtrlSVG")
+				.attr("opacity",0.3)
+				.attr("stroke-width",1.3);
+
+			// Actual path appended into svg
+			lineGraph1.append('path')
+				.attr('d', curved(points));
+		}
+
 	} // ToggleSVG function
 
 
@@ -154,11 +198,11 @@
 		$(document).ready(function() {
 			// underlineWord('.cm-attribute:contains(ng-controller)', 1);
 			$('#CtrlSVG').detach();
-			$('#CtrlSVG').detach();
+			$('#CtrlSVGHTML').detach();
 			underlineWord('.cm-property:contains(module)');
 			underlineWord('.cm-attribute:contains(ng-controller)', 1);
 			toggleSVG(appWord1, appWord2);
-			toggleSVG(htmlWord1, htmlWord2);
+			toggleSVG(htmlWord1, htmlWord2, 1);
 			underlineWord('.cm-property:contains(module)');
 			underlineWord('.cm-attribute:contains(ng-controller)', 1);
 		});
@@ -229,6 +273,7 @@
 		setTimeout(function(){
 			render();
 		},0);
+
 	});
 
 	// SETTING CODE EDITORS INITIAL CONTENT
