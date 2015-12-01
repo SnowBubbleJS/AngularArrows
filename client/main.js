@@ -1,43 +1,54 @@
 /*
 * PROBLEMS, YOU CAN CTRL+F EACH PROBLEM TO JUMP TO CODE SECTION...
-* FIXED WITH UNDERLINE: The HIGHLIGHT class goes over text selection...
+*
 *
 */
 
 (function() {
-	var word1,
-			word2,
+	var appWord1,
+			appWord2,
+			htmlWord1,
+			htmlWord2,
 			appPos = $('#app').position(),
 			controllerPos = $('#controller').position(),
 			SVGPresent = 0;
 
-	function underlineWord(query) {
+	function underlineWord(query, alt) {
 		var jquerySelection = $(query);
 		var matchContainer = [];
-		for (var i = 0; i < jquerySelection.length; i++) {
-			var selection = jquerySelection[i];
-			while(selection) {
-				if(selection.nextElementSibling) {
-					selection = selection.nextElementSibling;
-				} else {
-					matchContainer.push(selection);
-					selection = null;
+		if(alt) {
+			htmlWord1 = jquerySelection.offset();
+			console.log(htmlWord1);
+			var ctrlName = jquerySelection[0].nextElementSibling.innerHTML;
+			htmlWord2 = $('.cm-variable:contains('+ctrlName+')').offset();
+			console.log(htmlWord2);
+		}
+		else {
+			for (var i = 0; i < jquerySelection.length; i++) {
+				var selection = jquerySelection[i];
+				while(selection) {
+					if(selection.nextElementSibling) {
+						selection = selection.nextElementSibling;
+					} else {
+						matchContainer.push(selection);
+						selection = null;
+					}
 				}
 			}
-		}
 
-		if(matchContainer[0].innerHTML === matchContainer[1].innerHTML) {
-			word1 = $(matchContainer[0]).offset();
-			word2 = $(matchContainer[1]).offset();
-			matchContainer.forEach(function(item) {
-				if($(item)[0].className.indexOf('highlight') === -1) {
-					item.className += ' highlight';
-				}
-			});
+			if(matchContainer[0].innerHTML === matchContainer[1].innerHTML) {
+				appWord1 = $(matchContainer[0]).offset();
+				appWord2 = $(matchContainer[1]).offset();
+				matchContainer.forEach(function(item) {
+					if($(item)[0].className.indexOf('highlight') === -1) {
+						item.className += ' highlight';
+					}
+				});
+			}
 		}
 	}
 
-	function toggleSVG() {
+	function toggleSVG(word1, word2) {
 		// Curved line
 		var curved = d3.svg.line()
 				.x(function(d) { return d.x; })
@@ -57,7 +68,7 @@
 			.append("svg:svg")
 			.attr("width", '100%')
 			.attr("height", '100%')
-			.attr("id", "CtrlSVG");
+			.attr("class", "CtrlSVG");
 
 		// Actual path appended into svg
 		lineGraph1.append('path')
@@ -104,19 +115,20 @@
 	};
 
 	var render = function() {
+
 		var source = prepareSource();
 		var iframe = document.querySelector('#output iframe'),
 				iframe_doc = iframe.contentDocument;
 		iframe_doc.open();
 		iframe_doc.write(source);
 		iframe_doc.close();
-		// CREATE LINE
-		// ADD HIGHLIGHT CLASS TO 2 STRINGS THAT CONTAIN 'Codesmith'
+
 		$(document).ready(function() {
 			underlineWord('.cm-property:contains(module)');
-			// To only create one SVG
-			$('#CtrlSVG').remove();
-			toggleSVG();
+			underlineWord('.cm-attribute:contains(ng-controller)', 1)
+			$('.CtrlSVG').remove();
+			toggleSVG(appWord1, appWord2);
+			toggleSVG(htmlWord1, htmlWord2);
 		});
 	};
 
@@ -250,8 +262,9 @@ function myCtrl($scope, $http) {
 	});
 
 	$('#SVGButton').click(function() {
-		if(document.getElementById('CtrlSVG')) {
-			$('#CtrlSVG').remove();
+		if(document.getElementsByClassName('CtrlSVG').length > 0) {
+			console.log(document.getElementsByClassName('CtrlSVG'));
+			$('.CtrlSVG').remove();
 		} else {
 			render();
 			toggleSVG();
