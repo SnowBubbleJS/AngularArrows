@@ -100,7 +100,7 @@ html, body {
 }
 
 .highlight {
-	background: yellow;
+	text-decoration: underline;
 }
 
 /*For button to stay on top of SVG*/
@@ -108,6 +108,12 @@ html, body {
 	position: absolute;
 	z-index: 99;
 }
+#SVGButton {
+	position: absolute;
+	left: 40px;
+	z-index: 99;
+}
+
 
 svg {
 	position: absolute;
