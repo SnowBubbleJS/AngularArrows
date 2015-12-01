@@ -29,13 +29,6 @@ html, body {
 }*/
 
 
-.code_box {
-	height: 300px;
-	width: 24%;
-	display: inline-block;
-	z-index: 1;
-	position: relative;
-}
 
 .code_box h3 {
 	font-size: 13px;
@@ -103,7 +96,7 @@ html, body {
 
 svg {
 	position: absolute;
-	z-index: 10;
+	z-index: -1;
 	top: 0;
 	left: 0;
 }
@@ -113,6 +106,18 @@ path {
   stroke: #000;
 }
 
-toggleTop {
-	z-index: 98;
+.code_box {
+	height: 300px;
+	width: 24%;
+	display: inline-block;
+	z-index: 1;
+	position: relative;
+}
+
+.cm-s-default {
+	background: none;
+}
+
+.CodeMirror-gutters {
+	background: none;
 }
